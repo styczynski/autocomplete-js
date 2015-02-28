@@ -1,6 +1,15 @@
 # autocomplete-js
 The simplest jQuery plugin for creating autocomplete boxes with dynamically generated suggestions.
 
+## About
+This plugin allows you to create a nice looking, working suggestion input box within seconds.
+It can be easily customized and adapted to any task you want.
+This plugin is based on the complete-ly.js idea by Lorenzo Puccetti.
+
+## Installation
+
+Just run `npm install jquery-autocomplete-js`.
+
 ## Usage
 Just place a `<div>` element enywhere and use the javascript:
 
