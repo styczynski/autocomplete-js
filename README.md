@@ -1,3 +1,5 @@
+[![NPM](https://nodei.co/npm/jquery-autocomplete-js.png?downloads=true&downloadRank=true)](https://nodei.co/npm/jquery-autocomplete-js/)
+
 # autocomplete-js
 The simplest jQuery plugin for creating autocomplete boxes with dynamically generated suggestions.
 
