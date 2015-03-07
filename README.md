@@ -8,6 +8,9 @@ This plugin allows you to create a nice looking, working suggestion input box wi
 It can be easily customized and adapted to any task you want.
 This plugin is based on the complete-ly.js idea by Lorenzo Puccetti.
 
+## Features
+This plugin allows you to create suggestion box with optional description box within seconds!
+
 ## Installation
 
 Just run `npm install jquery-autocomplete-js`.
@@ -26,6 +29,18 @@ You can also directly access suggestions and input history:
 ```javascript
 ac.options = ["nope"]; //override suggestions list
 ac.historyInput = []; //clear history
+```
+
+And with fancy little description box:
+
+```javascript
+ac.options = [
+  {
+      name: "option name", //Option name
+      description: "option description", //Description text
+      html: true //Use HTML code in the description
+  }
+]; //advanced suggestions list
 ```
 
 ## Simple methods

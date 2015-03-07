@@ -1,5 +1,5 @@
 /**
- * autocomplete.js 1.0.2
+ * autocomplete.js 1.0.3
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
  *
@@ -18,6 +18,7 @@
  * var ac = $('#div').autocomplete({ options: ["apple", "bannana", "strawberry", "pineapple"] });
  * ac.options = ["nope"]; //override suggestions list
  * ac.historyInput = []; //clear history
+ * ac.options = [ {name:"option", "description":"description of the option", html: true} ] //Advanced suggestions (with descriptions)
  *
  **/
 
@@ -56,7 +57,6 @@ jQuery.fn.extend({
     settings.showDropDown = settings.showDropDown || false;
 		settings.options = settings.options || {};
 
-
 		var formInput = $('<input class="autocomplete autocomplete-input" type="text" spellcheck="false"></input>')
       .css('width', settings.inputWidth)
 		  .css('outline', '0')
@@ -68,7 +68,6 @@ jQuery.fn.extend({
   		.css('position', 'relative')
       .css('background', 'transparent')
       .addClass(settings.classes.input);
-
 
 		var formHint = formInput.clone()
       .css('width', settings.inputWidth)
@@ -83,6 +82,7 @@ jQuery.fn.extend({
       .addClass(settings.classes.hint);
 
 		var formWrapper = $('<div class="autocomplete autocomplete-wrapper"></div>')
+			.css('display', 'inline')
       .css('width', settings.inputWidth)
 		  .css('position', 'relative')
 		  .css('outline', '0')
@@ -117,8 +117,34 @@ jQuery.fn.extend({
 		  .css('left', '-' + w + 'px')
 		  .css('marginLeft', w + 'px');
 
+		var dropDownDescriptionBox = $('<div class="autocomplete autocomplete-dropdown-description-box"></div>')
+			.css('position', 'relative')
+			.css('left', settings.dropDownWidth)
+			/*.css('top', settings.suggestionBoxHeight)*/
+			.hide()
+			.css('word-break', 'keep-all')
+			.css('white-space', 'normal')
+			.css('outline', '0')
+			.css('margin', '0')
+			.css('padding', '0')
+			.css('text-align', 'left')
+			.css('font-size', settings.fontSize)
+			.css('font-family', settings.fontFamily)
+			.css('max-height', settings.suggestionBoxHeight)
+			.css('background-color', settings.backgroundColor)
+			.css('z-index', settings.dropDownZIndex)
+			.css('cursor', 'default')
+			.css('border-style', 'solid')
+			.css('border-width', '1px')
+			.css('border-color', settings.dropDownBorderColor)
+			.css('overflow-x', 'hidden')
+			.css('overflow-y', 'scroll')
+			.css('height', settings.suggestionBoxHeight)
+			.css('width', '30%');
+
 		var dropDown = $('<div class="autocomplete autocomplete-dropdown"></div>')
 		  .css('position', 'relative')
+			.css('top', settings.suggestionBoxHeight)
 		  .hide()
 		  .css('outline', '0')
 		  .css('margin', '0')
@@ -139,6 +165,20 @@ jQuery.fn.extend({
 		  .css('height', settings.suggestionBoxHeight)
 			.css('width', settings.dropDownWidth)
       .addClass(settings.classes.dropdown);
+
+		var extractOption = function(elem) {
+			var opt_name = "";
+			var opt_description = null;
+			if(elem.name != undefined && elem.name != null) {
+				opt_name = elem.name;
+				if(elem.description) {
+					opt_description = elem.description;
+				}
+			} else {
+				opt_name = elem;
+			}
+			return {name:opt_name, description:opt_description, html:elem.html};
+		};
 
 		var createDropDownController = function(elem) {
 			var rows = [];
@@ -172,7 +212,11 @@ jQuery.fn.extend({
 					var maxOptionsCount = 100;
 					var curOptionsCount = 0;
 					for (var i = 0; i < array.length; i++) {
-						if (array[i].toLowerCase().indexOf(token.toLowerCase()) === 0) {
+						var opt = extractOption(array[i]);
+						var opt_name = opt.name;
+						var opt_description = opt.description;
+
+						if (opt_name.toLowerCase().indexOf(token.toLowerCase()) === 0) {
               ++curOptionsCount;
   						if (curOptionsCount > settings.maxSuggestionsCount) {
   							break;
@@ -184,12 +228,31 @@ jQuery.fn.extend({
   						  .mousedown(onMouseDown)
                 .addClass(settings.classes.row);
 
-              divRow[0].__hint = divRow.__hint = array[i];
-  						divRow.html(token + '<b>' + array[i].substring(token.length) + '</b>');
+              divRow[0].__hint = divRow.__hint = opt_name;
+  						divRow.html(token + '<b>' + opt_name.substring(token.length) + '</b>');
+							divRow.description = opt_description;
+
   						rows.push(divRow);
   						elem.append(divRow);
             }
 					}
+
+					if(rows.length>1) {
+						if(rows[0].description) {
+							dropDownDescriptionBox.show();
+							if(rows[0].html) {
+								dropDownDescriptionBox.html(rows[0].description);
+							} else {
+								dropDownDescriptionBox.text(rows[0].description);
+							}
+						} else {
+							dropDownDescriptionBox.hide();
+						}
+					} else {
+						dropDownDescriptionBox.hide();
+					}
+
+
 					if (rows.length === 0) {
 						return;
 					}
@@ -203,26 +266,41 @@ jQuery.fn.extend({
 					if (distanceToTop > distanceToBottom * 3) {
 						elem
               .css('maxHeight', distanceToTop + 'px')
-						  .css('top', '')
+						  /*.css('top', '')*/
 						  .css('bottom', '100%');
 					} else {
 						elem
-              .css('top', '100%')
+              /*.css('top', '100%')*/
 						  .css('bottom', '')
 						  .css('maxHeight', distanceToBottom + 'px');
 					}
 					elem.show();
+
 				},
 				highlight: function(index) {
 					if (oldIndex != -1 && rows[oldIndex]) {
 						rows[oldIndex].css('backgroundColor', settings.backgroundColor);
 					}
           dropDown.find(settings.classes.hoverItem).removeClass(settings.classes.hoverItem);
-          dropDown.find('.autocomplete-hover-item').removeClass('autocomplete-hover-item');
+          var oldFocusedItem = dropDown.find('.autocomplete-hover-item');
+					oldFocusedItem.removeClass('autocomplete-hover-item');
+
+					if(rows[index].description) {
+						dropDownDescriptionBox.show();
+						if(rows[index].html) {
+							dropDownDescriptionBox.html(rows[index].description);
+						} else {
+							dropDownDescriptionBox.text(rows[index].description);
+						}
+					} else {
+						dropDownDescriptionBox.hide();
+					}
+
 					rows[index].css('backgroundColor', settings.dropDownOnHoverBackgroundColor);
           rows[index].addClass(settings.classes.hoverItem);
           rows[index].addClass('autocomplete-hover-item');
 					oldIndex = index;
+
 				},
 				move: function(step) {
 					if (!elem.is(':visible')) return '';
@@ -252,9 +330,12 @@ jQuery.fn.extend({
     if(!settings.showDropDown) {
       dropDown.css('visibility', 'hidden');
       dropDown.css('display', 'none');
+			dropDownDescriptionBox.css('visibility', 'hidden');
+			dropDownDescriptionBox.css('display', 'none');
     } else {
       formWrapper.append(dropDown);
-    }
+			formWrapper.append(dropDownDescriptionBox);
+		}
 		formWrapper.append(formHint);
 		formWrapper.append(formInput);
 
@@ -356,9 +437,10 @@ jQuery.fn.extend({
 
 				formHint.val('');
 				for (var i = 0; i < optionsLength; i++) {
-					var opt = options[i];
-					if (opt.indexOf(token) === 0) {
-						formHint.val(leftSide + opt);
+					var opt = extractOption(options[i]);
+					var opt_name = opt.name;
+					if (opt_name.indexOf(token) === 0) {
+						formHint.val(leftSide + opt_name);
 						break;
 					}
 				}
@@ -408,6 +490,7 @@ jQuery.fn.extend({
 			} // page down
       else if (keyCode == 27) { //escape
 				dropDownController.hide();
+				dropDownDescriptionBox.hide();
 				formHint.val(formInput.val());
 				formInput.focus();
 				return;
@@ -421,6 +504,7 @@ jQuery.fn.extend({
 				}
 				if (formHint.val().length > 0) {
 					dropDownController.hide();
+					dropDownDescriptionBox.hide();
 					formInput.val(formHint.val());
 					var hasTextChanged = registerOnTextChangeOldValue != formInput.val()
 					registerOnTextChangeOldValue = formInput.val();
