@@ -5,13 +5,14 @@
 ![](https://img.shields.io/npm/l/jquery-autocomplete-js.svg?style=flat-square)
 ![](https://img.shields.io/npm/dm/jquery-autocomplete-js.svg?style=flat-square)
 
-# [autocomplete-js](https://www.npmjs.com/package/jquery-autocomplete-js)
+# [autocomplete-js](http://isis97.github.io/autocomplete-js/)
 The simplest jQuery plugin for creating autocomplete boxes with dynamically generated suggestions.
 
 ## About
 This plugin allows you to create a nice looking, working suggestion input box within seconds.
 It can be easily customized and adapted to any task you want.
 This plugin is based on the complete-ly.js idea by Lorenzo Puccetti.
+[See autocomplete-js web page](http://isis97.github.io/autocomplete-js/)
 
 ### Motivation
 This plugin was made just to create new suggestions providing library being simple and lightweight.

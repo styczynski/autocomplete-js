@@ -1,5 +1,7 @@
 /**
- * autocomplete.js 1.0.3
+ * autocomplete.js 1.0.4
+ * http://isis97.github.io/autocomplete-js/
+ *
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
  *
