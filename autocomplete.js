@@ -1,9 +1,15 @@
 /**
- * autocomplete.js 1.0.4
- * http://isis97.github.io/autocomplete-js/
- *
+ * autocomplete.js 1.0.5
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
+ * isis97 - Styczynsky Digital Systems
+ *
+ * See the live examples at:
+ *	http://isis97.github.io/autocomplete-js/
+ *
+ * And view the Github project:
+ *  https://github.com/isis97/autocomplete-js
+ *
  *
  * MIT Licensing
  * Copyright (c) 2015 Piotr Aleksander Styczynski
@@ -28,6 +34,26 @@
 	$.fn.extend({
 		autocomplete: function(settings) {
 			var container = $(this);
+			var rs = {};
+
+			var createEventHandler = function(backHandlerCallback) {
+				backHandlerCallback = backHandlerCallback || function(){};
+				return {
+					handlers: [],
+					__back_handler: backHandlerCallback,
+					push: function(handler) {
+						this.handlers.push(handler);
+					},
+					call: function(args) {
+						t = rs;
+						args = args || [t];
+						this.__back_handler.apply(t, args);
+						for(var i=0;i<this.handlers.length;++i) {
+							this.handlers[i].apply(t, args);
+						}
+					}
+				};
+			};
 
 			if(settings == null || settings == {} || settings == undefined) {
 				return null;
@@ -42,12 +68,124 @@
 			}
 
 			settings = settings || {};
+			if(settings.scrollController === 'nanoscroller') {
+				var c = {
+				  scroller: null,
+				  scrollerPos: 0,
+				  init: function(e) {
+				    e.css('overflow', 'hidden');
+				    var contentWrapper = $( '<div class="nano-content"></div>' );
+				    e.wrapInner(contentWrapper);
+				    var nanoWrapper = $('<div class="nano"></div>');
+				    e.wrapInner(nanoWrapper);
+				    return contentWrapper;
+				  },
+				  repaint: function(e) {
+				    if(!this.scroller) {
+				      this.scroller = e.parent();
+				      this.scroller.nanoScroller({ alwaysVisible: true });
+				      this.scroller.on("update", function(event, vals){
+				        c.scrollerPos = vals.position;
+				      });
+				    }
+				    this.scroller.nanoScroller({ scrollTop: 0 });
+						this.scroller.nanoScroller();
+				  },
+				  scroll: function(value) {
+				    if(!this.scroller) return 0;
+				    if(value) {
+				      this.scroller.nanoScroller({ scrollTop: value });
+				    }
+				    return this.scrollerPos;
+				  }
+				};
+				settings.scrollController = c;
+			}
+
+			settings.scrollController = settings.scrollController || {
+				init: function(e) {
+					return e;
+				},
+				repaint: function(e) {
+
+				},
+				scroll: function(value) {
+					if(value) dropDown.scrollTop(value);
+					return dropDown.scrollTop();
+				}
+			};
+			settings.scrollController.init = settings.scrollController.init || function(e){return e};
+			settings.scrollController.repaint = settings.scrollController.repaint || function(){};
+			settings.scrollController.scroll = settings.scrollController.scroll || function(value){if(value) dropDown.scrollTop(value);return dropDown.scrollTop();};
+
+			settings.__event_dropdownShown = createEventHandler(function(e) {e.show();});
+			settings.__event_dropdownHidden = createEventHandler(function(e) {e.hide();});
+			settings.__event_confirmed = createEventHandler();
+			settings.__event_changed = createEventHandler();
+			settings.__event_history_browsed = createEventHandler();
+			settings.__event_key = createEventHandler();
+
+			if(settings.animation) {
+				var perfOP = function(e, dir) {
+					for(var i=0;i<settings.animation.length;++i) {
+						var key = settings.animation[i][0];
+						var value = null;
+						if(dir) {
+							value = settings.animation[i][1];
+						} else {
+							value = settings.animation[i][2];
+						}
+						if(key=='height') {
+							e.height(value);
+						} else if(key=='width') {
+							e.width(value);
+						} else {
+							e.css(key, value);
+						}
+					}
+				};
+				var generateOP = function(dir) {
+					var o = {};
+					for(var i=0;i<settings.animation.length;++i) {
+						var key = settings.animation[i][0];
+						var value = null;
+						if(dir) {
+							value = settings.animation[i][1];
+						} else {
+							value = settings.animation[i][2];
+						}
+						o[key] = value;
+					}
+					return o;
+				};
+				settings.__event_dropdownShown.push(function(e) {
+				  var thiz = this;
+				  e.stop().show();
+					perfOP(e, true);
+				  e.animate(
+			      generateOP(false),
+			      500,
+			      function(){
+			        thiz.repaint();
+			      }
+			    );
+				});
+				settings.__event_dropdownHidden.push(function(e) {
+					var thiz = this;
+				  e.stop().show();
+					perfOP(e, false);
+				  e.animate(
+			      generateOP(true),
+			      500,
+			      function(){
+			        e.hide();
+			      }
+			    );
+				});
+			}
+
 			settings.showWhenEmpty = settings.showWhenEmpty || false;
 			settings.isDisabled = settings.isDisabled || false;
-			settings.onConfirmed = settings.onConfirmed || function(){};
-			settings.onChanged = settings.onChanged || function(){};
-			settings.onHistoryBrowsed = settings.onHistoryBrowsed || function(){};
-			settings.onKey = settings.onKey || function(){};
 	    settings.inputWidth = settings.inputWidth || '100%';
 			settings.inputHeight = settings.inputHeight || '25px';
 			settings.dropDownWidth = settings.dropDownWidth || '50%';
@@ -79,9 +217,7 @@
 			settings.blockEvents = settings.blockEvents || true;
 			settings.options = settings.options || {};
 
-			var rs = {};
-
-			var formInput = $('<input class="autocomplete autocomplete-input" type="text" spellcheck="false"></input>')
+			var formInput = $('<input class="autocomplete autocomplete-input autocomplete-text" type="text" spellcheck="false"></input>')
 	      .css('width', settings.inputWidth)
 				.css('height', settings.inputHeight)
 			  .css('outline', '0')
@@ -90,10 +226,11 @@
 		    .css('padding', '0')
 	  		.css('verticalAlign', 'top')
 	  		.css('position', 'absolute')
-				.css('background-color', 'transparent')
+				//.css('background-color', 'transparent')
 	      .addClass(settings.classes.input);
 
 			var formHint = formInput.clone()
+				.removeClass('autocomplete-input')
 				.css('background-color', '')
 	      .css('width', settings.inputWidth)
 				.css('height', settings.inputHeight)
@@ -106,6 +243,8 @@
 			  .css('color', settings.hintColor)
 	      .addClass('autocomplete-hint')
 	      .addClass(settings.classes.hint);
+
+			formInput.css('background', 'none');
 
 			formHint.__val = formHint.val;
 			formHint.val = function(text) {
@@ -212,7 +351,8 @@
 					.css('border-width', '1px')
 					.css('border-color', settings.dropDownBorderColor)
 					.css('overflow-x', 'hidden')
-					.css('overflow-y', 'scroll')
+					.css('color', settings.color)
+					//.css('overflow-y', 'scroll')
 					.css('height', settings.suggestionBoxHeight)
 					.css('width', settings.dropDownDescriptionBoxWidth)
 					.addClass(settings.classes.descriptionBox);
@@ -274,24 +414,43 @@
 					$(this).css('outline', '0');
 				}
 				var onMouseDown = function() {
-					p.hide();
+					p.hideBlock();
 					p.onMouseSelected(this.__hint);
 				}
 
 				var p = {
+					contentElem: elem,
 					hideBlock: function () {
 						elem.attr('display', 'none');
 					},
-					showBlock: function () {
+					showBlock: function (optsPrev) {
+						var opts = this.contentElem.children().length;
+
+						var doCall = false;
+						var doCallHidden = false;
+
+						if(optsPrev<=1 && opts>1) {
+							doCall = true;
+						} else if(optsPrev>1 && opts<=1) {
+							doCallHidden = true;
+						}
 						elem.attr('display', 'block');
+						if(doCall) {
+							settings.__event_dropdownShown.call([dropDown]);
+						}
+						if(doCallHidden) {
+							this.hideBlock();
+							settings.__event_dropdownHidden.call([dropDown]);
+						}
 					},
 					hide: function() {
-						elem.hide();
+						this.hideBlock();
 					},
 					refresh: function(token, array) {
-						elem.hide();
+						//this.hide();
+
 						ix = 0;
-						elem.html("");
+						this.contentElem.html("");
 						var vph = (window.innerHeight || document.documentElement.clientHeight);
 						var distanceToTop = elem.offset().top - 6;
 						var distanceToBottom = vph - (elem.parent().height() - elem.height() - elem.offset().top) - 6;
@@ -321,7 +480,7 @@
 								divRow.description = opt_description;
 
 	  						rows.push(divRow);
-	  						elem.append(divRow);
+								this.contentElem.append(divRow);
 	            }
 						}
 
@@ -338,6 +497,7 @@
 							}
 						} else {
 							dropDownDescriptionBox.hide();
+							return;
 						}
 
 
@@ -391,16 +551,18 @@
 						oldIndex = index;
 
 					},
+					scrollController: settings.scrollController,
 					move: function(step) {
 						if (!elem.is(':visible')) return '';
 						if (ix + step === -1 || ix + step === rows.length) return rows[ix].__hint;
 						ix += step;
 						p.highlight(ix);
-						dropDown.scrollTop(dropDown.scrollTop() + step * dropDown.children().height());
+						this.scrollController.scroll(this.scrollController.scroll() + step * this.contentElem.children().height());
 						return rows[ix].__hint;
 					},
 					onMouseSelected: function() {}
 				};
+
 				return p;
 			}
 
@@ -458,8 +620,21 @@
 
 			rs = {
 				status: !settings.isDisabled,
+				/*settings.__event_dropdownShown = createEventHandler();
+				settings.__event_dropdownHidden = createEventHandler();
+				settings.__event_confirmed = createEventHandler();
+				settings.__event_changed = createEventHandler();
+				settings.__event_history_browsed = createEventHandler();
+				settings.__event_key = createEventHandler();*/
+				dropdownShown: function(callback) { settings.__event_dropdownShown.push(callback); return this; },
+				dropdownHidden: function(callback) { settings.__event_dropdownHidden.push(callback); return this; },
+				confirmed: function(callback) { settings.__event_confirmed.push(callback); return this; },
+				changed: function(callback) { settings.__event_changed.push(callback); return this; },
+				historyBrowsed: function(callback) { settings.__event_history_browsed.push(callback); return this; },
+				key: function(callback) { settings.__event_key.push(callback); return this; },
+
 				onKey: function(e) {
-					settings.onKey(e);
+					settings.__event_key.call(e);
 					return this;
 				},
 				disable: function() {
@@ -472,6 +647,7 @@
 				},
 				showDropDown: function() {
 					dropDown.show();
+					settings.__event_dropdownShown.call([dropDown]);
 					this.repaint();
 				},
 				isEnabled: function() {
@@ -481,22 +657,22 @@
 				onArrowUp: function() {return this;},
 				onEnter: function() {
 	        this.inputHistory.push(formInput.val());
-					settings.onConfirmed(this, this.getText());
+					settings.__event_confirmed.call([this, this.getText()]);
 					return this;
 	      },
 				onTab: function() {return this;},
 				onChange: function() {
-					settings.onChanged(this, this.getText());
+					settings.__event_changed.call([this, this.getText()]);
 					rs.repaint();
 					return this;
 				},
 	      onHistoryPrev: function() {
-					settings.onHistoryBrowsed(this, this.getInputHistory());
+					settings.__event_history_browsed.call([this, this.getInputHistory()]);
 	        formInput.val(this.historyNavigatePrev());
 					return this;
 				},
 	      onHistoryNext: function() {
-					settings.onHistoryBrowsed(this, this.getInputHistory());
+					settings.__event_history_browsed.call([this, this.getInputHistory()]);
 	        formInput.val(this.historyNavigateNext());
 					return this;
 				},
@@ -558,6 +734,9 @@
 					return this;
 				},
 				repaint: function() {
+					var finish = (function(){
+						dropDownController.scrollController.repaint(dropDownController.contentElem);
+					});
 
 					var text = formInput.val();
 					var startFrom = rs.startFrom;
@@ -586,13 +765,16 @@
 						}
 					}
 
+
+					var doShowBlock = false;
+					var showBlockOptionsOldNumber = dropDownController.contentElem.children().length;
 					if(!this.status) {
 							dropDownController.hideBlock();
 							dropDownDescriptionBox.hideBlock();
+							finish();
 							return this;
 					} else {
-						dropDownController.showBlock();
-						dropDownDescriptionBox.showBlock();
+						doShowBlock = true;
 					}
 
 					dropDown.css('left', calculateWidthForText(leftSide) + 'px');
@@ -606,6 +788,12 @@
 						dropDownController.refresh(token, rs.getOptions());
 					}
 
+					if(doShowBlock) {
+						dropDownController.showBlock(showBlockOptionsOldNumber);
+						dropDownDescriptionBox.showBlock();
+					}
+
+					finish();
 
 				}
 			};
@@ -739,6 +927,7 @@
 			};
 
 			formInput.keydown(keyDownHandler);
+			dropDownController.contentElem = dropDownController.scrollController.init(dropDown);
 
 			return rs;
 		}
