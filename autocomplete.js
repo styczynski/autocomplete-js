@@ -1,5 +1,5 @@
 /**
- * autocomplete.js 1.0.5
+ * autocomplete.js 1.0.6
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
  * isis97 - Styczynsky Digital Systems
