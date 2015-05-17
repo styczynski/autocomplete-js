@@ -1,5 +1,5 @@
 /**
- * autocomplete.js 1.0.6
+ * autocomplete.js 1.1.0
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
  * isis97 - Styczynsky Digital Systems
@@ -118,6 +118,7 @@
 			settings.scrollController.repaint = settings.scrollController.repaint || function(){};
 			settings.scrollController.scroll = settings.scrollController.scroll || function(value){if(value) dropDown.scrollTop(value);return dropDown.scrollTop();};
 
+			settings.__event_hintChanged = createEventHandler();
 			settings.__event_dropdownShown = createEventHandler(function(e) {e.show();});
 			settings.__event_dropdownHidden = createEventHandler(function(e) {e.hide();});
 			settings.__event_confirmed = createEventHandler();
@@ -252,6 +253,7 @@
 						return formHint.__val();
 				}
 				formHint.__val(text);
+				settings.__event_hintChanged.call([rs, text]);
 			};
 
 			var formWrapper = $('<div class="autocomplete autocomplete-wrapper"></div>')
@@ -626,6 +628,7 @@
 				settings.__event_changed = createEventHandler();
 				settings.__event_history_browsed = createEventHandler();
 				settings.__event_key = createEventHandler();*/
+				hintChanged: function(callback) { settings.__event_hintChanged.push(callback); return this; },
 				dropdownShown: function(callback) { settings.__event_dropdownShown.push(callback); return this; },
 				dropdownHidden: function(callback) { settings.__event_dropdownHidden.push(callback); return this; },
 				confirmed: function(callback) { settings.__event_confirmed.push(callback); return this; },
@@ -634,7 +637,7 @@
 				key: function(callback) { settings.__event_key.push(callback); return this; },
 
 				onKey: function(e) {
-					settings.__event_key.call(e);
+					settings.__event_key.call([e, e.which]);
 					return this;
 				},
 				disable: function() {

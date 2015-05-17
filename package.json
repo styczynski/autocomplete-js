@@ -1,6 +1,6 @@
 {
   "name": "jquery-autocomplete-js",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "description": "The simplest jQuery plugin for creating autocomplete boxes with dynamically generated suggestions.",
   "main": "autocomplete.js",
   "scripts": {
@@ -11,7 +11,13 @@
     "url": "https://github.com/isis97/autocomplete-js"
   },
   "keywords": [
+    "lightweight",
+    "simple",
+    "jquery-addon",
+    "jquery-plugin",
     "jquery",
+    "library",
+    "jquery-library",
     "autocomplete",
     "javascript",
     "js",
@@ -19,11 +25,15 @@
     "suggestions",
     "auto-complete"
   ],
-  "author": "Piotr Aleksander Styczynski",
+  "author": {
+    "name" : "Piotr Aleksander Styczynski",
+    "email" : "piotrsty1@gmail.com",
+    "url" : "https://github.com/isis97"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/isis97/autocomplete-js/issues",
-    "email": "piotrsty1@op.pl"
+    "email": "piotrsty1@gmail.com"
   },
   "homepage": "http://isis97.github.io/autocomplete-js/",
   "dependencies": {
