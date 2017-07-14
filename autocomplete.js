@@ -2,13 +2,13 @@
  * autocomplete.js 1.1.0
  * jQuery plugin
  * Remake of the complete-ly.js (c) by Lorenzo Puccetti - 2013
- * isis97 - Styczynsky Digital Systems
+ * styczynski - Styczynsky Digital Systems
  *
  * See the live examples at:
- *	http://isis97.github.io/autocomplete-js/
+ *	http://styczynski.ml/autocomplete-js/
  *
  * And view the Github project:
- *  https://github.com/isis97/autocomplete-js
+ *  https://github.com/styczynski/autocomplete-js
  *
  *
  * MIT Licensing
