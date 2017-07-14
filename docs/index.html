@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script src="./js/bootstrap-switch.min.js"></script>
+<script src="./js/showdown.min.js"></script>
+<script src="./js/showdown-table.min.js"></script>
+<script src="./js/prettify.js"></script>
+<script src="./js/smartAffix.js"></script>
+<script src="./js/emd.js"></script>
+<script src="../autocomplete.min.js"></script>
+<link rel="stylesheet" href="./css/smartAffix.css"></link>
+<link rel="stylesheet" href="./css/bootstrap.min.css"></link>
+<link rel="stylesheet" href="./css/bootstrap-theme.min.css"></link>
+<link rel="stylesheet" href="./css/bootstrap-switch.min.css"></link>
+<link rel="stylesheet" href="./css/prettify.css"></link>
+<link rel="stylesheet" href="./css/emd.css"></link>
+<script src="./js/random-words.js"></script>
+<script src="./js/nanoscroller.js"></script>
+<link rel="stylesheet" href="./css/nanoscroller.css"></link>
+
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Lato">
+</head>
+<body style="overflow-x:hidden;">
+
+<a href="https://github.com/styczynski/autocomplete-js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+<script style="display:none;" type="emd">
+
+
+[head]
+  title: "jquery-autocomplete-js",
+  icon: "http://jbeckwith.com/images/2012/09/node_128.png",
+  section-animation: "fade",
+  section-animation-timing: "500"
+[!head]
+
+
+====About====
+
+![](nodeico/npm/jquery-autocomplete-js.png?compact=true)
+
+![](shield-flat/npm/v/jquery-autocomplete-js)
+![](shield-flat/npm/l/jquery-autocomplete-js)
+![](shield-flat/npm/dm/jquery-autocomplete-js)
+
+[br]
+
+# [autocomplete-js](https://www.npmjs.com/package/jquery-autocomplete-js)
+The simplest jQuery plugin for creating autocomplete boxes with dynamically generated suggestions.
+
+<div class="example" id="example_leading" style="width:300px;position:relative;left:0px;top:0px;">
+</div>
+
+[br]
+[js]
+var opts = words(100);
+for(var i=0;i<opts.length;++i) {
+  var text = opts[i];
+  opts[i] = {
+    name: text,
+    description: '<b>'+text+'</b><br><br>'+words(5).join(' '),
+    html: true
+  };
+}
+var ex5 = $('#example_leading').autocomplete({
+  scrollController: 'nanoscroller',
+  animation: [
+    ['opacity', 0, 0.8],
+    ['height', 0, 100]
+  ],
+  options: words(100),
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  dropDownDescriptionBoxWidth: '70%',
+  suggestionBoxHeight: '100px',
+  color: 'white',
+  classes: {
+    dropdown: 'example-dropdown',
+    input: 'example-input'
+  }
+}).confirmed(function(obj, text) {
+  alert((obj.pullText()));
+});
+[!js]
+[br][br]
+
+## About
+This plugin allows you to create a nice looking, working suggestion input box within seconds.
+It can be easily customized and adapted to any task you want.
+This plugin is based on the complete-ly.js idea by Lorenzo Puccetti.
+
+### Motivation
+This plugin was made just to create new suggestions providing library being simple and lightweight.
+
+## Features
+
+This plugin allows you to create suggestion box with optional description box within seconds!
+
+## Installation
+
+Just run `npm install jquery-autocomplete-js`.
+
+## Usage
+
+[style]
+  .example {
+    font-family: 'Lato', serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+  }
+  .example > .autocomplete.autocomplete-text {
+    font-weight: bold;
+  }
+  .example:before {
+    position: relative;
+    top: 8px;
+    content: "Example";
+    margin-right: 15px;
+    font-weight: bold;
+    color: gray;
+  }
+  .example .autocomplete.autocomplete-text {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    background: linear-gradient(#EAEAEA, #FCFCFC);
+  }
+  .example-dropdown {
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+  	-webkit-box-shadow: 0 10px 6px -6px #777;
+  	   -moz-box-shadow: 0 10px 6px -6px #777;
+  	        box-shadow: 0 10px 6px -6px #777;
+  }
+  .divline {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px ridge transparent;
+    border-left-width: 5px;
+    border-radius: 3px;
+  }
+  .divlineS {
+    border-left-width: 1px;
+  }
+  .divlineM {
+    border-left-width: 3px;
+  }
+  .divlineL {
+    border-left-width: 5px;
+  }
+  .border-grad {
+    border-width: 0 3px 0;
+    border-right-width: 0;
+    border-color: #626262;
+  }
+[!style]
+
+
+Just place a `<div>` element anywhere and use the javascript:
+
+```javascript
+var ac = $('#div').autocomplete({
+  options: ["apple", "bannana", "strawberry", "pineapple"]
+});
+```
+You can see how the demos work. Try, let&#39;s type something (e.g. `apple`?)
+
+<div class="example" id="example0" style="width:300px;position:relative;left:0px;top:0px;"></div>
+[br]
+[js]
+var ac0 = $('#example0').autocomplete({
+  options: ["apple", "bannana", "strawberry", "pineapple"]
+});
+[!js]
+
+[br][br]
+You can also directly access suggestions and input history:
+
+```javascript
+ac.options = ["nope"]; //override suggestions list
+ac.historyInput = []; //clear history
+```
+
+<div class="example" id="example1" style="width:300px;position:relative;left:0px;top:0px;"></div>
+[br]
+[js]
+var ac1 = $('#example1').autocomplete({
+  options: ["apple", "bannana", "strawberry", "pineapple"]
+});
+ac1.options = ["nope"];
+[!js]
+
+[br][br]
+Note that the `options` field can be a function (options provider):
+
+```javascript
+ac.options = function(autocompleteInstance, text, lastToken){ //set the options provider
+  return ["nope", "lol"]; //provide the suggestions list
+};
+```
+In this case the options provider must accept the three parameters - autocomplete object instance (`autocompleteInstance`), the input query (`text`) and the last input query token (`lastToken`).
+
+
+## More advanced usage
+
+Showing the *dropdown* list:
+
+```javascript
+var ac = $('#div').autocomplete({
+  options: [
+    "apple", "amd", "august", "amerald",
+    "America", "amused", "a", "appendix",
+    "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+});
+```
+
+<div class="example" id="example2" style="width:300px;position:relative;left:0px;top:0px;"></div>
+[br]
+[js]
+$('#example2').autocomplete({
+  options: ["apple", "amd", "august", "amerald", "America", "amused", "a", "appendix", "application", "app"],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+});
+[!js]
+
+[br][br]
+And with fancy little description box:
+
+```javascript
+ac.options = [
+  {
+      name: "option name",
+        //Option name
+      description: "option description",
+        //Description text
+      html: true
+        //Use HTML code in the description
+  }
+]; //advanced suggestions list
+```
+
+[br][br]
+To display the suggestions descriptions you have to enable the suggestions dropdown list by
+setting the `showDropDown` constructor field to `true`. You can also set its position (top or bottom).
+And modify some of its display properties - [see API docs](jump-to:API docs).
+
+```javascript
+var ac = $('#div').autocomplete({
+  options: [
+    {
+      name: "apple",
+      description: "a <b>fruit</b>",
+      html: true
+    },
+    "amd", "august", "amerald",
+    "America", "amused", "a",
+    "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+});
+```
+
+<div class="example" id="example3" style="width:300px;position:relative;left:0px;top:0px;"></div>
+[br]
+[js]
+$('#example3').autocomplete({
+  options: [
+    {
+      name: "apple",
+      description: "a <b>fruit</b>",
+      html: true
+    },
+    "amd", "august", "amerald",
+    "America", "amused", "a",
+    "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+});
+[!js]
+
+[br][br]
+You can also enable history and add some event handlers:
+
+```javascript
+var ac = $('#div').autocomplete({
+  options: [
+    {
+      name: "apple",
+      description: "a <b>fruit</b>",
+      html: true
+    },
+    "amd", "august", "amerald",
+    "America", "amused", "a",
+    "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+}).confirmed(function(obj, text) {
+  $('#out').prepend('Confirmed ('+text+')');
+}).changed(function(obj, text) {
+  $('#out').prepend('Input has changed. ('+text+')');
+}).historyBrowsed(function(obj, hist) {
+  $('#out').prepend('History called ('+hist.join(',')+')');
+}).key(function(e, code) {
+  $('#out').prepend('Key pressed ('+code+')');
+}).dropdownShown(function() {
+  $('#out').prepend('Dropdown shown');
+}).dropdownHidden(function() {
+  $('#out').prepend('Dropdown hidden');
+}).hintChanged(function(obj, text) {
+  $('#out').prepend('Hint changed ('+text+')');
+});
+```
+
+Test everything by typing something in the input box and enabling the specified handlers:
+[br][br][br][br]
+
+<div class="border-grad" style="border-right-style:none;">
+  <table>
+    <tr>
+      <td>Enable 'confirmed' event handler:</li>
+      <td><input type="checkbox" name="example4_cb_0" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success" checked></li>
+    </tr>
+    <tr>
+      <td>Enable 'changed' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_1" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success" checked></td>
+    </tr>
+    <tr>
+      <td>Enable 'historyBrowsed' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_2" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success" checked></td>
+    </tr>
+    <tr>
+      <td>Enable 'key' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_3" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success"></td>
+    </tr>
+    <tr>
+      <td>Enable 'dropdownShown' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_4" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success" checked></td>
+    </tr>
+    <tr>
+      <td>Enable 'dropdownHidden' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_5" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success" checked></td>
+    </tr>
+    <tr>
+      <td>Enable 'hintChanged' event handler:</td>
+      <td><input type="checkbox" name="example4_cb_6" data-on-text="Yes" data-off-text="No" data-off-color="danger" data-on-color="success"></td>
+    </tr>
+  </table>
+</div>
+
+<div id="example4_wrapper">
+<div class="example" id="example4" style="width:300px;position:relative;left:0px;top:0px;"></div>
+<div id="example4_out" style="position:relative;left:450px;border-radius: 5px;-moz-border-radius: 5px;top:-12px;border-style:groove;border-width:3px;width:50%;min-height:40px;">
+  <button id="example4_btn_clear_log" style="position:absolute;right:10px;border-radius: 5px;-moz-border-radius: 5px;">
+    <span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span> Clear
+  </button>
+  <ul id="example4_out_c"></ul>
+</div>
+</div>
+
+[br]
+[js]
+$('#example4').autocomplete({
+  options: [
+    {
+      name: "apple",
+      description: "a <b>fruit</b>",
+      html: true
+    },
+    "amd", "august", "amerald",
+    "America", "amused", "a",
+    "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: 'white'
+}).confirmed(function(obj, text) {
+  if(!$("[name='example4_cb_0']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Confirmed ('+text+')</li>');
+}).changed(function(obj, text) {
+  if(!$("[name='example4_cb_1']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Input has changed. ('+text+')</li>');
+}).historyBrowsed(function(obj, hist) {
+  if(!$("[name='example4_cb_2']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">History called ('+hist.join(',')+')</li>');
+}).key(function(e, code) {
+  if(!$("[name='example4_cb_3']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Key pressed ('+code+')</li>');
+}).dropdownShown(function() {
+  if(!$("[name='example4_cb_4']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Dropdown shown</li>');
+}).dropdownHidden(function() {
+  if(!$("[name='example4_cb_5']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Dropdown hidden</li>');
+}).hintChanged(function(obj, text) {
+  if(!$("[name='example4_cb_6']").bootstrapSwitch('state')) return;
+  if($('#example4_out_c').children().length>5) $('#example4_out_c').children().last().remove();
+  $('#example4_out_c').prepend('<li style="line-height:90%;margin-left:0px;">Hint changed ('+text+')</li>');
+});
+
+$("[name='example4_cb_0']").bootstrapSwitch();
+$("[name='example4_cb_1']").bootstrapSwitch();
+$("[name='example4_cb_2']").bootstrapSwitch();
+$("[name='example4_cb_3']").bootstrapSwitch();
+$("[name='example4_cb_4']").bootstrapSwitch();
+$("[name='example4_cb_5']").bootstrapSwitch();
+$("[name='example4_cb_6']").bootstrapSwitch();
+
+$('#example4_btn_clear_log').click(function(){
+  $('#example4_out_c').html('');
+});
+
+[!js]
+
+
+## Customization
+
+If you want to customize the ugly scrollbar from the suggestions list you can use for example the [nanoscroller.js](https://github.com/jamesflorentino/nanoScrollerJS):
+Just add to your page header:
+
+* `nanoscroller.min.js`
+* `nanoscroller.css`
+
+And now create the autocompletion box:
+
+<div class="example" id="example5" style="width:300px;position:relative;left:0px;top:0px;"></div>
+
+[br]
+[js]
+var ex5 = $('#example5').autocomplete({
+  scrollController: 'nanoscroller',
+  options: [
+    {
+      name: "apple",
+      description: "a <b>fruit</b>",
+      html: true
+    },
+    "amd", "august", "amerald",
+    "America", "amused", "a",
+    "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  color: 'white'
+}).confirmed(function(obj, text) {
+  alert(obj.pullText());
+}).dropdownShown(function(e) {
+  e.stop().show().css('opacity', 0).animate({ opacity: 0.8 }, 500);
+}).dropdownHidden(function(e) {
+  e.stop().show().css('opacity', 0.8).animate({ opacity: 0 }, 500);
+});
+[!js]
+
+
+For further customization [see customization page](jump-to:Customization).
+
+## Simple methods
+
+Just a little amount of the useful methods:
+
+
+| Method name         | Description                                                                                        |
+|---------------------|----------------------------------------------------------------------------------------------------|
+| `disable()`         | Disables all autocompletion suggestions (should be probably followed by `repaint()`)                                                     |
+| `enable()`          | Enables all autocompletion suggestions (see `disable()`) (should be probably followed by `repaint()`)                                                  |
+| `isEnabled()`       | Tests if the autocompletion suggestions are enabled (see `disable()` or `enable()`)                                                     |
+| `hideDropDown()`    | Hides a drop down suggestions list by force.                                                                |
+| `getOptions()`      | Returns the options array (if the `options` field set manually or/and by the constructor is `Function` type, then the array generated by it will be returned).                                                                |
+| `showDropDown()`    | Shows a drop down suggestions list by force.                                                                |
+| `getText()`         | Obtains the input text.                                                                            |
+| `pullText()`        | Obtains the input text and clears it.                                                                            |
+| `setText(String)`   | Sets the input text.                                                                               |
+| `repaint()`         | Refreshes the autocomplete box.                                                                    |
+| `getInputHistory()` | Get the input history array.                                                                       |
+| `onHistoryNext()`   | Simulate a history browsing event.                                                                 |
+| `onHistoryPrev()`   | Simulate a history browsing event.                                                                 |
+
+All functions except these returning strings or any other special values returns the instance of the autocomplete provider, so they can be chained easily.
+
+[js]
+$(function(){
+  $('h2').addClass('divline divlineM').css('border-left-color', '#5bc0de');
+  $('.example').before('<span class="example-cursor glyphicon glyphicon-menu-right" aria-hidden="true" style="float:left;padding-top:10px;padding-right:10px;"></span>');
+  var timeout = 1000;
+  $('.example-cursor').each(function(){
+    var thiz = $(this);
+    var f = (function(){
+      thiz.animate({
+        left: 8
+      }, timeout, function(){
+        thiz.animate({
+          left: 0
+        }, timeout, function(){
+          setTimeout(function(){f();}, timeout);
+        });
+      });
+    });
+    f();
+  });
+});
+[!js]
+
+## Full working example
+
+The full code of the first presented demo.
+
+Do not forget to include to your html file the folowing stylesheet and script files:
+
+* `autocomplete.js`
+* `nanoscroller.js`
+* `nanoscroller.css`
+
+
+```css
+
+#div {
+  font-family: 'Lato', serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+#div > .autocomplete.autocomplete-text {
+  font-weight: bold;
+}
+#div .autocomplete.autocomplete-text {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  background: linear-gradient(#EAEAEA, #FCFCFC);
+}
+.autocomplete-dropdown {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
+}
+```
+
+```javascript
+
+$('#example_leading').autocomplete({
+  scrollController: 'nanoscroller',
+  animation: [
+    ['opacity', 0, 0.8],
+    ['height', 0, 100]
+  ],
+  options: words(100),
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  dropDownDescriptionBoxWidth: '70%',
+  suggestionBoxHeight: '100px',
+  color: 'white',
+  classes: {
+    dropdown: 'example-dropdown',
+    input: 'example-input'
+  }
+}).confirmed(function(obj, text) {
+  alert((obj.pullText()));
+});
+```
+
+[footer]
+- styczynski Styczynsky Digital Systems
+[!footer]
+
+====Customization====
+
+## Add own animations!
+
+It&#39;s deadly simple customization, because you can use the `animation` field like this:
+
+```javascript
+
+$('#div').autocomplete({
+  /* ... */
+  animation: [
+    [
+      'opacity', /* Animated property name */
+      0, /* Start value */
+      0.8 /* Final value */
+    ],
+    ['height', 0, 100]
+  ]
+  /* ... */
+});
+```
+
+The animations are implemented using jQuery `css` and `animate` functions, so you
+can easily add fancy animations to your dropdown.
+Of course sometimes it&#39;s not enough, so we provided event listeners,
+which can implement animations as follows:
+
+```javascript
+
+e.dropdownShown(function(e) {
+  var thiz = this;
+  e.stop()
+      //Stop current animations...
+    .show()
+      //Make sure the dropdown is visible
+    .css('opacity', 0)
+      //Animate the dropdown
+    .height(0)
+    .animate(
+      { opacity: 0.8, height: 100 },
+      500,
+      function(){
+        thiz.repaint();
+        //This must be called to make
+        //the scrollbar recalculate the
+        //content size.
+      }
+    );
+}).dropdownHidden(function(e) {
+  e.stop()
+      //Stop current animations...
+    .show()
+      //Make sure the dropdown is visible
+    .css('opacity', 0.8)
+      //Animate the dropdown
+    .height(100)
+    .animate(
+      { opacity: 0, height: 0 },
+      500,
+      function(){
+        e.hide();
+        //And don't forget to hide the dropdown!
+      }
+    );
+});
+
+```
+
+## Customize the ugly scrollbar!
+
+You can customize the ugly scrollbar using the `scrollController` constructor field.
+The scrollController has to implement three methods:
+
+* `init` - function called when the scrollbar is inited, should return the object that will be used as the dropdown elements container.
+* `repaint` - function called when the dropdown is refreshed (used for dropdown scrollbar size recalculation)
+* `scroll` - function called when the scrollbar is scrolled by some pixels or with no parameter to get the scroll value
+
+The default scroll controller looks like this:
+
+```javascript
+$('#div').autocompelte({
+  scrollController: {
+    init: function(e) {
+      //The e parameter is jQuery dropdown list DOM element
+      return e; //Returns the container for the list objects
+    },
+    repaint: function(e) {
+      //Does the recalculation of the scrollbar size
+      //It's not needed when dealing with the native scrollbar.
+    },
+    scroll: function(value) {
+      //Scroll by the specified value if provided
+      if(value) dropDown.scrollTop(value); //using jQuery
+
+      //Return the current scroll value:
+      return dropDown.scrollTop();
+    }
+  }
+});
+```
+
+You can implement your own scrollbar handler or use the [nanoscroller.js](https://github.com/jamesflorentino/nanoScrollerJS) by
+setting the `scrollController` field to `"nanoscroller"`:
+
+```javascript
+
+$('#div').autocomplete({
+  scrollController: 'nanoscroller',
+  options: [
+    "amd", "august", "amerald", "America", "amused", "a", "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  color: 'white'
+});
+```
+
+Of course rememmber to include the `nanoscroller` files to your `html`:
+
+* `nanoscroller.min.js`
+* `nanoscroller.css`
+
+<div class="example" id="example_customization1" style="width:300px;position:relative;left:0px;top:0px;"></div>
+
+[br]
+[js]
+$('#example_customization1').autocomplete({
+  scrollController: 'nanoscroller',
+  options: [
+    "amd", "august", "amerald", "America", "amused", "a", "appendix", "application", "app"
+  ],
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  color: 'white'
+});
+[!js]
+
+## Use the custom styling
+
+Let&#39;s use some CSS styling:
+
+```css
+
+#div {
+  font-family: 'Lato', serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+#div > .autocomplete.autocomplete-text {
+  font-weight: bold;
+}
+#div .autocomplete.autocomplete-text {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  background: linear-gradient(#EAEAEA, #FCFCFC);
+}
+.autocomplete-dropdown {
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+     -moz-box-shadow: 0 10px 6px -6px #777;
+          box-shadow: 0 10px 6px -6px #777;
+}
+```
+
+The default autocomplete object classes are:
+
+* `autocomplete-text` for the hint and input field (used for styling the input box)
+* `autocomplete-dropdown` - the dropdown list component
+* `autocomplete-wrapper` - the wrapper for all elements
+* `autocomplete-dropdown-description-box` - the dropdown description box compoent
+* `autocomplete-input` - the input field (for styling purpose use the `autocomplete-text`)
+* `autocomplete-hint` - the input field hint (for styling purpose use the `autocomplete-text`)
+
+The final result is:
+
+<div class="example" id="example_leading_customization" style="width:300px;position:relative;left:0px;top:0px;"></div>
+
+[br]
+[js]
+var opts = words(100);
+for(var i=0;i<opts.length;++i) {
+  var text = opts[i];
+  opts[i] = {
+    name: text,
+    description: '<b>'+text+'</b><br><br>'+words(5).join(' '),
+    html: true
+  };
+}
+$('#example_leading_customization').autocomplete({
+  scrollController: 'nanoscroller',
+  options: words(100),
+  showDropDown: true,
+  dropDownPosition: 'bottom',
+  backgroundColor: '#626262',
+  dropDownOnHoverBackgroundColor: '#313131',
+  dropDownDescriptionBoxWidth: '70%',
+  suggestionBoxHeight: '100px',
+  color: 'white',
+  classes: {
+    dropdown: 'example-dropdown',
+    input: 'example-input'
+  }
+}).confirmed(function(obj, text) {
+  alert((obj.pullText()));
+}).dropdownShown(function(e) {
+  var thiz = this;
+  e.stop().show().css('opacity', 0).height(0).animate({ opacity: 0.8, height: 100 }, 500, function(){thiz.repaint();});
+}).dropdownHidden(function(e) {
+  e.stop().show().css('opacity', 0.8).height(100).animate({ opacity: 0, height: 0 }, 500, function(){e.hide();});
+});
+[!js]
+[br][br]
+
+[js]
+$(function(){
+  $('h2').addClass('divline divlineM').css('border-left-color', '#5bc0de');
+  $('.example').before('<span class="example-cursor glyphicon glyphicon-menu-right" aria-hidden="true" style="float:left;padding-top:10px;padding-right:10px;"></span>');
+  var timeout = 1000;
+  $('.example-cursor').each(function(){
+    var thiz = $(this);
+    var f = (function(){
+      thiz.animate({
+        left: 8
+      }, timeout, function(){
+        thiz.animate({
+          left: 0
+        }, timeout, function(){
+          setTimeout(function(){f();}, timeout);
+        });
+      });
+    });
+    f();
+  });
+});
+[!js]
+
+
+[footer]
+- styczynski Styczynsky Digital Systems
+[!footer]
+
+
+====API docs====
+
+## Constructor properties
+
+The autocomplete instance is created with:
+```javascript
+var instance = $('div.my-autocomplete').autocomplete({
+  /*Constructor properties*/
+});
+```
+
+Here is a list of all available initial properties:
+
+| property                         | type                                                  | default value   | meaning                                                                     |
+|----------------------------------|-------------------------------------------------------|-----------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `animation`                      | Array of Arrays                                       | []              | Sets the custom dropdown animations. Please do NOT use it if you implemented custom animations using event handlers. ([see customization page](jump-to:Customization)) |
+| `scrollController`               | Object                                                | native controller | Sets the scrollbar controller - used to implement custom scrollbars on the dropdown ([see customization page](jump-to:Customization)) |
+| `isDisabled`                     | Bool                                                  | false           | Disables autocompletion function when at initialization (can be used with `key` event handler to enable autocompletion only when specified key combination was made) |
+| `showDropDown`                   | Bool                                                  | false           | Enables the dropdown suggestion list                                        |
+| `dropDownPosition`               | String                                                | 'bottom'        | Sets the dropdown position (top/bottom).                                    |
+| `inputWidth`                     | String                                                | 100%            | CSS width of the input box                                                  |
+| `dropDownWidth`                  | String                                                | 50%             | CSS width of the dropdown list                                              |
+| `dropDownDescriptionBoxWidth`    | String                                                | 50%             | CSS width of the dropdown list description box                              |
+| `fontSize`                       | String                                                | null            | CSS size of the text                                                        |
+| `fontFamily`                     | String                                                | null            | CSS font family                                                             |
+| `formPromptHtml`                 | String                                                | ''              | HTML code for the prompt                                                    |
+| `color`                          | String                                                | null            | Text color                                                                  |
+| `hintColor`                      | String                                                | null            | Text color of the suggestion hint                                           |
+| `backgroundColor`                | String                                                | null            | CSS background color for the dropdown                                       |
+| `dropDownBorderColor`            | String                                                | null            | CSS suggestions drop down border color                                      |
+| `dropDownZIndex`                 | Integer                                               | 100             | CSS z-index of the drop down list.                                          |
+| `dropDownOnHoverBackgroundColor` | String                                                | null            | CSS background color of the selected drop down suggestion item              |
+| `enableHistory`                  | Bool                                                  | true            | Enable browsing the input history.                                          |
+| `inputHistory`                   | Array                                                 | []              | Override the input history.                                                 |
+| `classes.input`                  | String                                                | null            | Set the class name for the input component.                                 |
+| `classes.dropdown`               | String                                                | null            | Set the class name for the drop down component.                             |
+| `classes.descriptionBox`         | String                                                | null            | Set the class name for the drop down description box component.             |
+| `classes.hint`                   | String                                                | null            | Set the class name for the hint text component.                             |
+| `classes.wrapper`                | String                                                | null            | Set the class name for the wrapper component.                               |
+| `classes.prompt`                 | String                                                | null            | Set the class name for the prompt component.                                |
+| `classes.hoverItem`              | String                                                | null            | Set the class name for the hovered suggestions list item.                   |
+| `classes.row`                    | String                                                | null            | Set the class name for the suggestions list row.                            |
+| `maxSuggestionsCount`            | Integer                                               | 100             | Set the maximum suggestion entries number.                                  |
+| `suggestionBoxHeight`            | String                                                | 75px            | CSS height of the suggestion box.                                           |
+| `options`                        | Array or Function(instance, input, lastToken)         | {}              | All strings that will be displayed as suggestions for the input box / or function which returns this array.        |
+| `blockEvents`                    | Bool                                                  | true            | Blocks the events propagation - if the enter is pressed only the `onConfirmed` handler is invoked and the key event is not further propagated. |
+
+## Autocomplete event listeners
+
+You can add one/or more listeners to the autocomplete list to implement callbacks for the specified events.
+E.g.
+
+```javascript
+ac.key(function(event){
+  console.log(event);
+}).confirmed(instance, text) {
+  alert(text);
+});
+```
+
+| Listener register              | Handler parameters                 | Event description |
+|--------------------------------|------------------------------------|-------------------|
+| `key`                          | `(jQuery.Event, int keyCode)`      | Key input handler. It should be the function accepting two parameters - jQuery event object and the ASCII code of the pressed character. The function will be called each time the user will press any non-special key (not arrows and enter) - can be used with `isDisabled` option to disable autocompletion at startup and then call `enable()` to enable the autocompletion on the specified key combination. |
+| `confirmed`                    | `(autocompleteInstance, String)`   | Input confirmation handler. It should be the function accepting two parameters - autocomplete object instance and the captured value of the field. The function will be called each time the user hits enter. |
+| `changed`                      | `(autocompleteInstance, String)`   | Input change handler. It should be the function accepting two parameters - autocomplete object instance and the captured value of the field. The function will be called each time the user changes anything with the input (key press, text change etc.). |
+| `historyBrowsed`               | `(autocompleteInstance, String[])` | History browsing handler. It should be the function accepting two parameters - autocomplete object instance and the array containing the input history. The function will be called each time the user uses the history browsing. |
+| `dropdownShown`                | `(dropDownInstance)`               | Dropdown show event is triggered when the drop down is shown (you can use it to enable dropdown animations - [see customization page](jump-to:Customization)) |
+| `dropdownHidden`               | `(dropDownInstance)`               | Dropdown hide event is triggered when the drop down is hidden (you can use it to enable dropdown animations - [see customization page](jump-to:Customization)) |
+| `hintChanged`                  | `(autocompleteInstance, String)`   | Hint changed event is triggered when user changes his input, so the dynamic suggestion is also changed. The handler accepts instance of the autocomplete and hint text as parameters. |
+
+## The autocomplete fields
+
+Here is the list of all useful autocomplete methods and fields:
+
+| Field                   | Type          | Meaning                                                                        |
+|-------------------------|---------------|--------------------------------------------------------------------------------|
+| `startFrom`             | Integer       | The index the input string is matched from for suggestions                     |
+| `options`               | Array         | All string suggestions.                                                        |
+| `inputHistory`          | Array         | History of the input.                                                          |
+| `dropDown`              | JQuery object | The drop down component.                                                       |
+| `formPrompt`            | JQuery object | The propmpt component                                                          |
+| `hint`                  | JQuery object | The hint component                                                             |
+| `input`                 | JQuery object | The input box object                                                           |
+| `formWrapper`           | JQuery object | The wrapper component.                                                         |
+| `historyBrowsingActive` | Bool          | The bool value indicating if the user currently is browsing the input history. |
+| `historyIndex`          | Integer       | The currently browsed history index.                                           |
+
+[js]
+$(function(){
+  $('h2').addClass('divline divlineM').css('border-left-color', '#5bc0de');
+  $('.example').before('<span class="example-cursor glyphicon glyphicon-menu-right" aria-hidden="true" style="float:left;padding-top:10px;padding-right:10px;"></span>');
+  var timeout = 1000;
+  $('.example-cursor').each(function(){
+    var thiz = $(this);
+    var f = (function(){
+      thiz.animate({
+        left: 8
+      }, timeout, function(){
+        thiz.animate({
+          left: 0
+        }, timeout, function(){
+          setTimeout(function(){f();}, timeout);
+        });
+      });
+    });
+    f();
+  });
+});
+[!js]
+
+[footer]
+- styczynski Styczynsky Digital Systems
+[!footer]
+
+</script>
+<script type="text/javascript">$.emd.init();</script>
+
+</body>
+</html>
